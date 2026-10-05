@@ -23,13 +23,16 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 6rem;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, s[1D[K
-sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.6;
       color: var(--text-light);
       background-color: var(--bg-dark);
-      scroll-behavior: smooth;
     }
 
     a {
@@ -146,7 +149,7 @@ sans-serif;
 
     /* Hero Section */
     .hero {
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       text-align: center;
@@ -194,7 +197,7 @@ sans-serif;
     /* Projects Section */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
       gap: 2rem;
     }
 
@@ -311,8 +314,28 @@ sans-serif;
         gap: 2rem;
       }
 
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
       .nav-links {
-        display: none;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .nav-links li {
+        margin-left: 0;
+      }
+
+      html {
+        scroll-padding-top: 8rem;
+      }
+
+      .hero {
+        padding-top: 8rem;
       }
 
       h1 {
@@ -330,7 +353,7 @@ sans-serif;
   <header>
     <div class="container">
       <nav>
-        <a href="#" class="logo">Anthony Varnit</a>
+        <a href="#home" class="logo">Anthony Varnit</a>
         <ul class="nav-links">
           <li><a href="#about">About</a></li>
           <li><a href="#projects">Projects</a></li>
@@ -357,14 +380,9 @@ sans-serif;
       <h2>About Me</h2>
       <div class="about-content">
         <div class="about-text">
-          <p>Passionate developer with expertise in creating responsive, us[2D[K
-user-friendly websites and applications. I focus on clean code, intuitive d[1D[K
-design, and seamless user experiences.</p>
-          <p>Currently working on projects that blend creativity with funct[5D[K
-functionality to solve real-world problems.</p>
-          <p>When not coding, I enjoy exploring new technologies, contribut[9D[K
-contributing to open-source projects, and mentoring aspiring developers.</p[14D[K
-developers.</p>
+          <p>Passionate developer with expertise in creating responsive, user-friendly websites and applications. I focus on clean code, intuitive design, and seamless user experiences.</p>
+          <p>Currently working on projects that blend creativity with functionality to solve real-world problems.</p>
+          <p>When not coding, I enjoy exploring new technologies, contributing to open-source projects, and mentoring aspiring developers.</p>
         </div>
         <div class="about-image">
           <!-- Replace this placeholder with actual image -->
@@ -387,8 +405,7 @@ developers.</p>
           </div>
           <div class="project-content">
             <h3>E-Commerce Platform</h3>
-            <p>A full-featured online shopping experience with payment inte[4D[K
-integration and inventory management.</p>
+            <p>A full-featured online shopping experience with payment integration and inventory management.</p>
             <a href="#" class="btn">View Project</a>
           </div>
         </div>
@@ -401,8 +418,7 @@ integration and inventory management.</p>
           </div>
           <div class="project-content">
             <h3>Task Management App</h3>
-            <p>Productivity application helping teams organize projects and[3D[K
-and track progress efficiently.</p>
+            <p>Productivity application helping teams organize projects and track progress efficiently.</p>
             <a href="#" class="btn">View Project</a>
           </div>
         </div>
@@ -415,8 +431,7 @@ and track progress efficiently.</p>
           </div>
           <div class="project-content">
             <h3>Portfolio Website</h3>
-            <p>Responsive portfolio template designed for creative professi[8D[K
-professionals and developers.</p>
+            <p>Responsive portfolio template designed for creative professionals and developers.</p>
             <a href="#" class="btn">View Project</a>
           </div>
         </div>
@@ -428,8 +443,7 @@ professionals and developers.</p>
   <section class="contact" id="contact">
     <div class="container">
       <h2>Get In Touch</h2>
-      <p>Have a project in mind or want to discuss opportunities? Feel free[4D[K
-free to reach out!</p>
+      <p>Have a project in mind or want to discuss opportunities? Feel free to reach out!</p>
       <div class="contact-form">
         <div class="form-group">
           <label for="name">Name</label>
@@ -446,8 +460,7 @@ free to reach out!</p>
         <button type="submit" class="btn">Send Message</button>
       </div>
       <p style="margin-top: 2rem;">
-        Or email me directly at: <a href="mailto:anthony@anthonyvarnit.com"[39D[K
-href="mailto:your.email@example.com">your.email@example.com (replace with your email)</a>
+        Or email me directly at: <a href="mailto:your.email@example.com">your.email@example.com (replace with your email)</a>
       </p>
     </div>
   </section>
