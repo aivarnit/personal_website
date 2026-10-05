@@ -1,10 +1,10 @@
 // Replace null values with your real URLs. Resume example: 'assets/resume.pdf'.
 export const profile = {
-  github: null,
-  linkedin: null,
-  email: null,
-  resume: null,
-  portrait: 'assets/profile-placeholder.svg',
+  github: 'https://github.com/aivarnit',
+  linkedin: 'https://www.linkedin.com/in/anthony-varnit/',
+  email: 'anthonyvarnit@proton.me',
+  resume: 'assets/resume_general.pdf',
+  portrait: 'assets/1747692949884.jpeg',
   portraitAlt: 'Abstract portrait silhouette placeholder for Anthony Varnit',
   portraitCaption: 'Portrait placeholder',
 };
