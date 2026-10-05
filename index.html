@@ -5,7 +5,7 @@
     <title>Anthony Varnit | Systems &amp; Software Engineer</title>
     <meta name="description" content="Anthony Varnit — a software-focused engineer bridging software development, systems engineering, cloud, networking, and automation.">
     <meta property="og:title" content="Anthony Varnit | Systems & Software Engineer"><meta property="og:description" content="Software thinking. Systems perspective. Explore my background and technical projects."><meta property="og:type" content="website"><meta property="og:url" content="https://anthonyvarnit.com/"><meta property="og:image" content="https://anthonyvarnit.com/assets/social-preview.svg">
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="assets/inter-variable.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="css/styles.css"><script type="module" src="js/app.js?v=1"></script>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="assets/inter-variable.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="css/styles.css?v=3"><link rel="stylesheet" href="css/motion.css?v=2"><script type="module" src="js/app.js?v=3"></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -64,7 +64,7 @@
           <span>CODE. CONNECT. BUILD.</span><a href="#about">SCROLL TO EXPLORE ↓</a>
         </div>
       </section>
-      <section class="section shell reveal" id="about" aria-labelledby="about-title">
+      <section class="section shell" id="about" aria-labelledby="about-title">
         <div class="section-label mono">
           <span>01 / ABOUT</span><span>A CONNECTED PERSPECTIVE</span>
         </div>
@@ -87,7 +87,7 @@
         </div>
       </section>
       <section class="section section-tonal" id="background" aria-labelledby="background-title">
-        <div class="shell reveal">
+        <div class="shell">
           <div class="section-label mono">
             <span>02 / BACKGROUND</span><span>THE PATH SO FAR</span>
           </div>
@@ -113,7 +113,7 @@
           </div>
         </div>
       </section>
-      <section class="section shell reveal" id="skills" aria-labelledby="skills-title">
+      <section class="section shell" id="skills" aria-labelledby="skills-title">
         <div class="section-label mono">
           <span>03 / TOOLKIT</span><span>ACROSS THE STACK</span>
         </div>
@@ -125,7 +125,7 @@
         </div>
       </section>
       <section class="section section-tonal" id="projects" aria-labelledby="projects-title">
-        <div class="shell reveal">
+        <div class="shell">
           <div class="section-label mono">
             <span>04 / PROJECTS</span><span>IDEAS INTO IMPLEMENTATION</span>
           </div>
@@ -144,18 +144,19 @@
           </div>
         </div>
       </section>
-      <section class="contact section shell reveal" id="contact" aria-labelledby="contact-title">
+      <section class="contact section shell" id="contact" aria-labelledby="contact-title">
         <div class="section-label mono">
           <span>05 / CONTACT</span><span>THE NEXT CONVERSATION</span>
         </div>
         <div class="contact-layout">
           <div>
-            <h2 id="contact-title">Let’s build<br>something <span class="muted">reliable.</span></h2><p>Interested in discussing software engineering opportunities<br>or a technical project? Let’s connect.</p>
+            <h2 id="contact-title">Let’s connect.<br><span class="muted">Engineering what’s next.</span></h2>
+            <p>I’m open to Software Engineering, Systems Engineering, Infrastructure / Platform, and IT Engineering opportunities where I can apply both my software development and systems background.</p>
+            <p>I welcome conversations with engineers, recruiters, and hiring teams about opportunities and technical collaboration.</p>
           </div>
           <div class="contact-links" data-contact-links>
           </div>
         </div>
-        <p class="placeholder-note">Contact details and resume are awaiting your information.</p>
       </section>
     </main>
     <footer class="shell footer">
@@ -164,14 +165,35 @@
       </div>
       <a class="mono back-top" href="#home">BACK TO TOP ↑</a>
     </footer>
-    <dialog class="project-dialog" id="project-dialog" aria-labelledby="dialog-title">
+    <dialog class="modal project-dialog" id="project-dialog" aria-labelledby="dialog-title">
       <div class="dialog-top">
         <span class="mono">PROJECT / IN DETAIL</span><button class="close-dialog" aria-label="Close project details" autofocus>Close ×</button>
       </div>
       <div id="project-detail">
       </div>
     </dialog>
-    <dialog class="notice-dialog" id="notice-dialog" aria-labelledby="notice-title">
+    <dialog class="modal resume-dialog" id="resume-dialog" aria-labelledby="resume-title">
+      <div class="dialog-top">
+        <h2 id="resume-title" class="mono">ANTHONY VARNIT / RESUME</h2>
+        <button class="close-dialog" aria-label="Close resume" autofocus>Close ×</button>
+      </div>
+      <div class="resume-controls" hidden>
+        <span class="resume-page-count mono"></span>
+        <div class="resume-zoom">
+          <button data-zoom="out" aria-label="Zoom out" title="Zoom out">−</button>
+          <button data-zoom="fit" aria-label="Fit resume to viewer width" title="Fit width">Fit width</button>
+          <button data-zoom="in" aria-label="Zoom in" title="Zoom in">+</button>
+        </div>
+      </div>
+      <div class="resume-preview" aria-label="Resume pages, scroll to read" role="region" tabindex="0" aria-busy="false"></div>
+      <div class="resume-toolbar">
+        <a class="resume-open-file" target="_blank" rel="noopener noreferrer" hidden>Open PDF in new tab ↗</a>
+        <a class="resume-download" download="Anthony-Varnit-Resume.pdf" aria-label="Download resume" title="Download resume" hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>
+        </a>
+      </div>
+    </dialog>
+    <dialog class="modal notice-dialog" id="notice-dialog" aria-labelledby="notice-title">
       <button class="close-dialog" aria-label="Close notice" autofocus>Close ×</button><h2 id="notice-title">Details coming soon.</h2><p id="notice-text"></p>
     </dialog>
     <noscript>

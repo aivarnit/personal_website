@@ -1,4 +1,7 @@
 import { profile, experience, certifications, skills, projects } from './data.js';
+import { createModal } from './modal.js';
+import { initializeMotion } from './motion.js';
+import { createResumeViewer } from './resume.js?v=3';
 
 // Data is rendered as text to keep edited content from becoming executable HTML.
 function element(tag, className, text) {
@@ -22,24 +25,29 @@ function externalLink(label, href, className = '') {
   return link;
 }
 const notice = document.querySelector('#notice-dialog');
+const noticeModal = createModal(notice);
 function showNotice(key) {
   const messages = {
     github: 'The GitHub profile URL has not been added yet.',
     linkedin: 'The LinkedIn profile URL has not been added yet.',
     email: 'The contact email address has not been added yet.',
-    resume: 'The resume PDF has not been added yet.',
   };
   document.querySelector('#notice-text').textContent = messages[key];
-  notice.showModal();
-  document.body.classList.add('modal-open');
+  noticeModal.open();
 }
+const openResume = createResumeViewer(document.querySelector('#resume-dialog'), profile.resume);
 const labels = { github: 'GitHub', linkedin: 'LinkedIn', email: 'Email', resume: 'Resume' };
 function profileAction(key, className = '', label = labels[key]) {
   let action;
-  if (profile[key]) {
+  if (key === 'resume') {
+    action = element('button', className, label);
+    action.type = 'button';
+    action.setAttribute('aria-haspopup', 'dialog');
+    action.setAttribute('aria-controls', 'resume-dialog');
+    action.addEventListener('click', openResume);
+  } else if (profile[key]) {
     const href = key === 'email' ? `mailto:${profile[key]}` : profile[key];
     action = externalLink(label, href, className);
-    if (key === 'resume') action.download = 'Anthony-Varnit-Resume.pdf';
   } else {
     action = element('button', className, label);
     action.type = 'button';
@@ -48,12 +56,12 @@ function profileAction(key, className = '', label = labels[key]) {
   }
   return action;
 }
-document.querySelector('[data-profile-link="resume"]').append(profileAction('resume', 'button', 'Resume ↓'));
+document.querySelector('[data-profile-link="resume"]').append(profileAction('resume', 'button', 'Resume ↗'));
 for (const key of ['github', 'linkedin', 'email']) document.querySelector('[data-social-links]').append(profileAction(key, '', `${labels[key]} ↗`));
 for (const key of ['email', 'linkedin', 'github', 'resume']) {
   const action = profileAction(key);
   if (!profile[key]) action.append(element('small', '', 'COMING SOON'));
-  action.append(element('span', '', key === 'resume' ? '↓' : '↗'));
+  action.append(element('span', '', '↗'));
   document.querySelector('[data-contact-links]').append(action);
 }
 for (const key of ['github', 'linkedin']) document.querySelector('[data-footer-links]').append(profileAction(key));
@@ -79,9 +87,7 @@ certifications.forEach(item => {
   const card = element('article', 'cert-card');
   const copy = element('div');
   copy.append(element('h4', '', item.title), element('p', '', item.status));
-  const symbol = element('span', '', '↗');
-  symbol.setAttribute('aria-hidden', 'true');
-  card.append(copy, symbol);
+  card.append(copy);
   document.querySelector('#certification-list').append(card);
 });
 skills.forEach((group, index) => {
@@ -96,6 +102,7 @@ skills.forEach((group, index) => {
 
 const projectDialog = document.querySelector('#project-dialog');
 const detail = document.querySelector('#project-detail');
+const projectModal = createModal(projectDialog, { onClose: () => detail.replaceChildren() });
 function imageFigure(src, alt, caption) {
   const figure = element('figure', 'detail-media');
   const image = element('img');
@@ -162,9 +169,7 @@ function openProject(project) {
   if (!project.github && !project.demo) links.append(element('p', 'placeholder-note', 'Repository and demo links to be added.'));
   body.append(links);
   detail.append(body);
-  projectDialog.showModal();
-  projectDialog.scrollTop = 0;
-  document.body.classList.add('modal-open');
+  projectModal.open();
 }
 projects.forEach((project, index) => {
   const card = element('article', 'project-card');
@@ -196,30 +201,6 @@ projects.forEach((project, index) => {
   document.querySelector(`#${project.gallery === 'software' ? 'software' : 'infrastructure'}-projects`).append(card);
 });
 
-// Native dialogs handle Escape and restoration; keep Tab cycling inside content.
-for (const dialog of [projectDialog, notice]) {
-  dialog.querySelector('.close-dialog').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('keydown', event => {
-    if (event.key !== 'Tab') return;
-    const controls = [...dialog.querySelectorAll('a[href], button, input, select, textarea, video[controls], iframe, [tabindex]')]
-      .filter(control => !control.disabled && control.tabIndex >= 0 && control.getClientRects().length);
-    const first = controls[0];
-    const last = controls.at(-1);
-    if (controls.length === 1 || (event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
-      event.preventDefault();
-      (event.shiftKey ? last : first)?.focus();
-    }
-  });
-  dialog.addEventListener('click', event => {
-    if (event.target !== dialog) return;
-    const bounds = dialog.getBoundingClientRect();
-    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
-  });
-  dialog.addEventListener('close', () => {
-    document.body.classList.remove('modal-open');
-    if (dialog === projectDialog) detail.replaceChildren(); // Stop videos and embeds.
-  });
-}
 const menuToggle = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('#nav-links');
 function closeMenu(returnFocus = false) {
@@ -243,6 +224,7 @@ function updateNavigation() {
   for (const section of document.querySelectorAll('main > section[id]')) {
     if (section.getBoundingClientRect().top <= header.offsetHeight + 120) current = section.id;
   }
+  if (scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 2) current = 'contact';
   for (const link of navigation.querySelectorAll('a')) {
     if (link.hash === `#${current}`) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
@@ -256,10 +238,4 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 window.addEventListener('resize', updateNavigation);
 updateNavigation();
-if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  document.body.classList.add('motion-ready');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } });
-  }, { threshold: 0, rootMargin: '0px 0px -30px 0px' });
-  document.querySelectorAll('.reveal').forEach(section => observer.observe(section));
-}
+initializeMotion();

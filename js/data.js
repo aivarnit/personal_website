@@ -5,8 +5,8 @@ export const profile = {
   email: 'anthonyvarnit@proton.me',
   resume: 'assets/resume_general.pdf',
   portrait: 'assets/1747692949884.jpeg',
-  portraitAlt: 'Abstract portrait silhouette placeholder for Anthony Varnit',
-  portraitCaption: 'Portrait placeholder',
+  portraitAlt: 'Anthony Varnit',
+  portraitCaption: 'Anthony Varnit',
 };
 
 // These entries show progression without inventing employers or achievements.
