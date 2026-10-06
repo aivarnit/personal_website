@@ -216,30 +216,79 @@
   margin: -8px 0 28px;
 }
 
-.modal[open].shared-expansion,
-.modal[open].shared-expansion.is-closing {
-  transform-origin: top left;
+
+/* Project surfaces only fade. The floating poster owns all spatial motion. */
+.project-dialog[open] {
+  animation: project-fade-in 220ms ease both;
+}
+.project-dialog[open].is-closing {
+  animation: project-fade-out 160ms ease both;
+}
+.project-dialog #project-detail {
   animation: none;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .shared-expansion .detail-body > :not(.project-cover),
-  .shared-expansion .dialog-top,
-  .shared-expansion .project-cover figcaption {
-    animation: secondary-enter 180ms ease 160ms backwards;
-  }
-  .shared-expansion.is-closing .detail-body > :not(.project-cover),
-  .shared-expansion.is-closing .dialog-top,
-  .shared-expansion.is-closing .project-cover figcaption {
-    animation: secondary-exit 80ms ease forwards;
-  }
+.shared-media-hidden {
+  visibility: hidden !important;
 }
-
-@keyframes secondary-exit {
-  to { opacity: 0; }
+.shared-media-layer {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+  background: #292a2d;
+  pointer-events: none;
+  transform-origin: top left;
+  will-change: transform;
+  z-index: 10;
 }
-
-@keyframes secondary-enter {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.project-dialog:has(.shared-media-layer) {
+  scrollbar-color: transparent transparent;
 }
+.shared-media-layer::backdrop {
+  background: transparent;
+}
+.shared-media-layer img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.project-cover > video,
+.project-cover > iframe {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.project-dialog[open].shared-media {
+  animation: project-panel-in 220ms ease 220ms both;
+}
+.project-dialog[open].shared-media.is-closing {
+  animation: project-panel-out 160ms ease forwards;
+}
+.shared-media .detail-body > :not(.project-cover),
+.shared-media .dialog-top,
+.shared-media .project-cover figcaption {
+  animation: secondary-enter 200ms ease 280ms backwards;
+}
+.shared-media.is-closing .detail-body > :not(.project-cover),
+.shared-media.is-closing .dialog-top,
+.shared-media.is-closing .project-cover figcaption {
+  animation: secondary-exit 160ms ease forwards;
+}
+.project-dialog[open].shared-media.is-closing::backdrop {
+  animation: backdrop-exit 250ms ease 300ms both;
+}
+@keyframes project-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes project-fade-out { to { opacity: 0; } }
+@keyframes project-panel-in {
+  from { background-color: transparent; border-color: transparent; }
+  to { background-color: var(--panel); border-color: #55565a; }
+}
+@keyframes project-panel-out {
+  to { background-color: transparent; border-color: transparent; }
+}
+@keyframes secondary-exit { to { opacity: 0; } }
+@keyframes secondary-enter { from { opacity: 0; } to { opacity: 1; } }
