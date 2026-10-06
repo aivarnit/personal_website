@@ -164,8 +164,7 @@ function openProject(project, card) {
   title.id = 'dialog-title';
   const cover = imageFigure(project.image, project.imageAlt, 'Concept visual placeholder — replace with a project screenshot.');
   cover.classList.add('project-cover');
-  // A primary player occupies the same cover slot; its poster is always the
-  // card thumbnail so the shared-element handoff keeps identical artwork.
+  // A primary player occupies the cover slot and uses the card image as its poster.
   const primary = project.media[0];
   const hasPrimaryPlayer = primary?.type === 'video' || (primary?.type === 'youtube' && /^[\w-]{11}$/.test(primary.videoId));
   if (hasPrimaryPlayer) {
@@ -173,7 +172,7 @@ function openProject(project, card) {
     cover.firstElementChild.replaceWith(player);
     cover.querySelector('figcaption').textContent = primary.caption || primary.title || 'Project demonstration';
   }
-  body.append(cover, element('span', 'mono muted project-secondary', `${project.category.toUpperCase()} / ${project.draft ? 'DRAFT PROJECT DETAILS' : project.dates}`), title, element('p', '', project.fullDescription), tags(project.technologies));
+  body.append(cover, element('span', 'mono muted', `${project.category.toUpperCase()} / ${project.draft ? 'DRAFT PROJECT DETAILS' : project.dates}`), title, element('p', '', project.fullDescription), tags(project.technologies));
   project.media.slice(hasPrimaryPlayer ? 1 : 0).forEach(media => body.append(renderMedia(media)));
   const grid = element('div', 'detail-grid');
   for (const [key, label] of [['goal', 'Problem / goal'], ['implementation', 'Technical implementation'], ['challenges', 'Challenges'], ['outcome', 'Outcome']]) {
@@ -188,12 +187,7 @@ function openProject(project, card) {
   if (!project.github && !project.demo) links.append(element('p', 'placeholder-note', 'Repository and demo links to be added.'));
   body.append(links);
   detail.append(body);
-  projectModal.open({
-    origin: card,
-    sourceMedia: card.querySelector('.project-visual'),
-    destinationMedia: cover.firstElementChild,
-    posterImage: card.querySelector('.project-visual img'),
-  });
+  projectModal.open({ origin: card });
 }
 projects.forEach((project, index) => {
   const card = element('article', 'project-card');
