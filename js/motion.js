@@ -7,9 +7,10 @@ export function initializeMotion() {
     node.style.setProperty('--reveal-delay', `${delay}ms`);
     items.add(node);
   }
-  // Observe individual elements so long mobile galleries never wait as a group.
+  // Project cards stay static: focus return must never replay a reveal on them.
+  // Observe individual elements in the remaining sections.
   document.querySelectorAll('.section-label, .section-heading, .about-layout > *, .education, .subheading, .gallery-heading, .contact-layout > *').forEach(node => add(node));
-  document.querySelectorAll('.principles, .skills-grid, .projects-grid, #experience-list, .certification-grid').forEach(group => {
+  document.querySelectorAll('.principles, .skills-grid, #experience-list, .certification-grid').forEach(group => {
     [...group.children].forEach((node, index) => add(node, (index % 3) * 65));
   });
   let observer;

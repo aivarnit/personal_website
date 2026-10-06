@@ -1,6 +1,6 @@
 import { profile, biography, education, career, experience, certifications, skills, projects } from './data.js';
 import { createModal } from './modal.js';
-import { initializeMotion } from './motion.js';
+import { initializeMotion } from './motion.js?v=2';
 import { initializeBackground } from './background.js';
 import { createResumeViewer } from './resume.js?v=3';
 

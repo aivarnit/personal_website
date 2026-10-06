@@ -67,6 +67,8 @@ A faint dot pattern and low-opacity grayscale radial illumination add depth. Des
 
 Project, resume, and notice dialogs open and close immediately, including their backdrops. All content appears together with no fades, staggered reveals, scale transitions, or shared-thumbnail animation. Reduced-motion users receive the same instant interaction. The modal controller preserves keyboard activation, Tab/Shift+Tab cycling, Escape, backdrop dismissal, and focus return. Closing pauses and resets native video, stops embeds, and synchronously cleans up content so projects can be reopened rapidly.
 
+Project cards use static hover styling and the existing keyboard focus outline. They have no scroll reveal, focus-driven highlight, transform transition, or persistent press state, so returning focus from a modal cannot restart an animation on the previous card. Hover styling is inactive while a modal is open.
+
 A first video or YouTube media entry occupies the existing cover slot, with `project.image` providing the video poster; other media entries remain below the project description. Stable scrollbar space prevents underlying cards from shifting when scroll is locked.
 
 ## Validation

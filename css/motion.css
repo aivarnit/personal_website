@@ -54,36 +54,16 @@
   transform: translateY(0);
 }
 
-.project-card {
-  transition: transform 220ms var(--ease-out), border-color 220ms ease, background 220ms ease;
-}
-
-.project-visual img {
-  transition: transform 250ms var(--ease-out);
-}
-
-.project-bottom span {
-  transition: color 200ms ease;
-}
-
-.project-card:focus-within .project-bottom span {
-  color: var(--text);
-}
-
 .skill-group {
   transition: background 200ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .project-card:hover {
-    transform: translateY(-4px);
+  body:not(.modal-open) .project-card:hover {
     border-color: #77787d;
     background: #222325;
   }
-  .project-card:hover img {
-    transform: scale(1.035);
-  }
-  .project-card:hover .project-bottom span {
+  body:not(.modal-open) .project-card:hover .project-bottom span {
     color: var(--text);
   }
   .skill-group:hover {
@@ -149,9 +129,7 @@
     opacity: 1;
     transform: none;
   }
-  .button:hover,
-  .project-card:hover,
-  .project-card:hover img {
+  .button:hover {
     transform: none;
   }
 }
