@@ -191,3 +191,55 @@
     transform: none;
   }
 }
+
+.ambient-background {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: radial-gradient(ellipse 440px 360px at var(--ambient-x, 55%) var(--ambient-y, 25%), #ffffff08, transparent 75%), radial-gradient(circle, #ffffff07 .7px, transparent .9px);
+  background-size: auto, 26px 26px;
+}
+
+.project-cover {
+  margin: 0 0 28px;
+}
+
+.project-cover img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.career-caption {
+  color: var(--muted);
+  font-size: 11px;
+  margin: -8px 0 28px;
+}
+
+.modal[open].shared-expansion,
+.modal[open].shared-expansion.is-closing {
+  transform-origin: top left;
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shared-expansion .detail-body > :not(.project-cover),
+  .shared-expansion .dialog-top,
+  .shared-expansion .project-cover figcaption {
+    animation: secondary-enter 180ms ease 160ms backwards;
+  }
+  .shared-expansion.is-closing .detail-body > :not(.project-cover),
+  .shared-expansion.is-closing .dialog-top,
+  .shared-expansion.is-closing .project-cover figcaption {
+    animation: secondary-exit 80ms ease forwards;
+  }
+}
+
+@keyframes secondary-exit {
+  to { opacity: 0; }
+}
+
+@keyframes secondary-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

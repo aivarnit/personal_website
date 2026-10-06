@@ -1,6 +1,7 @@
-import { profile, experience, certifications, skills, projects } from './data.js';
+import { profile, biography, education, career, experience, certifications, skills, projects } from './data.js';
 import { createModal } from './modal.js';
 import { initializeMotion } from './motion.js';
+import { initializeBackground } from './background.js';
 import { createResumeViewer } from './resume.js?v=3';
 
 // Data is rendered as text to keep edited content from becoming executable HTML.
@@ -70,6 +71,13 @@ document.querySelector('#profile-image').src = profile.portrait;
 document.querySelector('#profile-image').alt = profile.portraitAlt;
 document.querySelector('#portrait-caption').textContent = profile.portraitCaption;
 
+document.querySelector('.hero-summary').textContent = biography.hero;
+const aboutCopy = document.querySelector('.about-copy');
+const aboutLink = aboutCopy.querySelector('a');
+aboutCopy.replaceChildren(element('p', 'lead', biography.lead), ...biography.paragraphs.map(text => element('p', '', text)), aboutLink);
+const educationCard = document.querySelector('.education-card');
+educationCard.replaceChildren(element('span', 'education-mark', 'F /'), element('h4', '', education.school), element('p', '', education.degree), element('span', 'mono metadata', education.dates), element('p', 'metadata', education.location));
+document.querySelector('.experience .subheading').after(element('p', 'career-caption mono', `${career.company} / ${career.dates}`));
 experience.forEach(item => {
   const article = element('article', 'experience-item');
   const top = element('div', 'experience-top');
@@ -86,7 +94,8 @@ experience.forEach(item => {
 certifications.forEach(item => {
   const card = element('article', 'cert-card');
   const copy = element('div');
-  copy.append(element('h4', '', item.title), element('p', '', item.status));
+  copy.append(element('h4', '', item.title));
+  if (item.status) copy.append(element('p', '', item.status));
   card.append(copy);
   document.querySelector('#certification-list').append(card);
 });
@@ -148,13 +157,14 @@ function renderMedia(media) {
   if (media.caption) figure.append(element('figcaption', '', media.caption));
   return figure;
 }
-function openProject(project) {
+function openProject(project, card) {
   detail.replaceChildren();
   const body = element('div', 'detail-body');
   const title = element('h2', '', project.title);
   title.id = 'dialog-title';
-  body.append(element('span', 'mono muted', `${project.category.toUpperCase()} / DRAFT PROJECT DETAILS`), title, element('p', '', project.fullDescription), tags(project.technologies));
-  body.append(imageFigure(project.image, project.imageAlt, 'Concept visual placeholder — replace with a project screenshot.'));
+  const cover = imageFigure(project.image, project.imageAlt, 'Concept visual placeholder — replace with a project screenshot.');
+  cover.classList.add('project-cover');
+  body.append(cover, element('span', 'mono muted project-secondary', `${project.category.toUpperCase()} / ${project.draft ? 'DRAFT PROJECT DETAILS' : project.dates}`), title, element('p', '', project.fullDescription), tags(project.technologies));
   project.media.forEach(media => body.append(renderMedia(media)));
   const grid = element('div', 'detail-grid');
   for (const [key, label] of [['goal', 'Problem / goal'], ['implementation', 'Technical implementation'], ['challenges', 'Challenges'], ['outcome', 'Outcome']]) {
@@ -169,7 +179,7 @@ function openProject(project) {
   if (!project.github && !project.demo) links.append(element('p', 'placeholder-note', 'Repository and demo links to be added.'));
   body.append(links);
   detail.append(body);
-  projectModal.open();
+  projectModal.open({ origin: card });
 }
 projects.forEach((project, index) => {
   const card = element('article', 'project-card');
@@ -187,7 +197,7 @@ projects.forEach((project, index) => {
   meta.append(element('span', '', project.category.toUpperCase()), element('span', '', String(index + 1).padStart(2, '0')));
   content.append(meta, element('h4', '', project.title), element('p', '', project.description), tags(project.technologies));
   button.append(visual, content);
-  button.addEventListener('click', () => openProject(project));
+  button.addEventListener('click', () => openProject(project, card));
   const bottom = element('div', 'project-bottom mono');
   bottom.append(element('span', '', 'EXPLORE PROJECT ↗'));
   button.append(bottom);
@@ -239,3 +249,4 @@ window.addEventListener('scroll', () => {
 window.addEventListener('resize', updateNavigation);
 updateNavigation();
 initializeMotion();
+initializeBackground();
