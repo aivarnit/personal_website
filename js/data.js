@@ -75,7 +75,7 @@ export const skills = [
 ];
 
 // Three projects are supported by the resume; the other entries remain drafts.
-// TODOs: add real screenshots, repository/demo URLs, and a Color-Track video.
+// TODOs: add real screenshots and repository/demo URLs for remaining projects.
 // Confirm Monty Hall, Open WebUI, Docker Homelab, and any Hermes Agent details.
 // Add personal reflections on challenges; no certification dates or metrics supplied.
 // Media options: image / gif {type, src, alt, caption}; video {type, src,
@@ -91,14 +91,15 @@ const makeProject = (project) => ({ ...detailPlaceholders, github: null, demo: n
 export const projects = [
   makeProject({
     id: 'color-track', gallery: 'software', title: 'Color-Track', category: 'Robotics / Computer vision', dates: 'April 2023', draft: false,
-    description: 'Real-time color-specific object tracking for a TurtleBot3 robot.',
-    fullDescription: 'A Python robotics application using OpenCV and Rospy to continuously process video and autonomously track color-specific objects with a TurtleBot3.',
-    goal: 'Detect and follow color-specific objects in dynamic environments.',
-    implementation: 'Computer vision logic detects the target and calculates angular and linear velocity adjustments based on its position. Development and testing used Linux, ROS tooling, and command-line workflows.',
-    outcome: 'Built and tested a real-time tracking application with continuous video processing and autonomous target following.',
-    technologies: ['Python', 'OpenCV', 'Rospy', 'Linux', 'Git'],
+    description: 'A ROS computer-vision project that tracks a selected color and publishes robot motion commands.',
+    fullDescription: 'The Python ROS nodes use OpenCV and CvBridge to process camera images, threshold a selected color, calculate image moments and the target centroid, then publish Twist motion commands. OANode relays safe motion to cmd_vel and applies laser-based bumper adjustments.',
+    goal: 'Center a selected colored region in the camera view and adjust robot motion using its image position and area.',
+    implementation: 'CTrack uses cv2.inRange to create a mask and image moments to find the centroid. It compares centroid X with the image center and computes angular.z as 0.4 × (image width / 2 − centroid X) / image width. The mask moment divided by image height × width selects linear.x from −0.1, 0, or 0.1. OANode subscribes to /odom, /scan, and /safe_cmd_vel, then publishes to cmd_vel with bumper adjustments.',
+    outcome: 'CTrack includes a target-found branch that writes a goal<number>.jpg proof image and stops its velocity command when its target-area condition is met.',
+    technologies: ['Python', 'rospy', 'ROS', 'OpenCV', 'CvBridge', 'NumPy', 'TurtleBot'],
+    github: 'https://github.com/aivarnit/color-track',
     image: 'assets/color-track.svg', imageAlt: 'Concept illustration of a target-tracking interface, not a project screenshot',
-    media: [{ type: 'placeholder', title: 'TurtleBot demonstration', caption: 'Add a video showing color detection, target tracking, and movement toward the object.' }],
+    media: [],
   }),
   makeProject({
     id: 'n-queens', gallery: 'software', title: 'N-Queens Solver', category: 'Algorithms / Visualization', dates: 'October 2024', draft: false,

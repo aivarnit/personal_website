@@ -3,6 +3,8 @@ import { createModal } from './modal.js';
 import { initializeMotion } from './motion.js?v=2';
 import { initializeBackground } from './background.js';
 import { createResumeViewer } from './resume.js?v=3';
+import { colorTrackDemo } from './color-track-demo.js';
+import { ProjectDemoPlayer } from './project-demo-player.js';
 
 // Data is rendered as text to keep edited content from becoming executable HTML.
 function element(tag, className, text) {
@@ -111,7 +113,12 @@ skills.forEach((group, index) => {
 
 const projectDialog = document.querySelector('#project-dialog');
 const detail = document.querySelector('#project-detail');
-const projectModal = createModal(projectDialog, { onClose: () => detail.replaceChildren() });
+let activeDemoPlayer = null;
+const projectModal = createModal(projectDialog, { onClose: () => {
+  activeDemoPlayer?.destroy();
+  activeDemoPlayer = null;
+  detail.replaceChildren();
+} });
 function imageFigure(src, alt, caption) {
   const figure = element('figure', 'detail-media');
   const image = element('img');
@@ -162,6 +169,7 @@ function openProject(project, card) {
   const body = element('div', 'detail-body');
   const title = element('h2', '', project.title);
   title.id = 'dialog-title';
+  const description = element('p', '', project.fullDescription);
   const cover = imageFigure(project.image, project.imageAlt, 'Concept visual placeholder — replace with a project screenshot.');
   cover.classList.add('project-cover');
   // A primary player occupies the cover slot and uses the card image as its poster.
@@ -172,7 +180,14 @@ function openProject(project, card) {
     cover.firstElementChild.replaceWith(player);
     cover.querySelector('figcaption').textContent = primary.caption || primary.title || 'Project demonstration';
   }
-  body.append(cover, element('span', 'mono muted', `${project.category.toUpperCase()} / ${project.draft ? 'DRAFT PROJECT DETAILS' : project.dates}`), title, element('p', '', project.fullDescription), tags(project.technologies));
+  const isColorTrack = project.id === 'color-track';
+  if (!isColorTrack) body.append(cover);
+  body.append(element('span', 'mono muted', `${project.category.toUpperCase()} / ${project.draft ? 'DRAFT PROJECT DETAILS' : project.dates}`), title);
+  if (isColorTrack) {
+    activeDemoPlayer = ProjectDemoPlayer(colorTrackDemo, { fallbackPoster: project.image });
+    body.append(activeDemoPlayer.element);
+  }
+  body.append(description, tags(project.technologies));
   project.media.slice(hasPrimaryPlayer ? 1 : 0).forEach(media => body.append(renderMedia(media)));
   const grid = element('div', 'detail-grid');
   for (const [key, label] of [['goal', 'Problem / goal'], ['implementation', 'Technical implementation'], ['challenges', 'Challenges'], ['outcome', 'Outcome']]) {

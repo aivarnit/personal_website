@@ -16,7 +16,7 @@ Open **http://localhost:8000**. Use a local HTTP server rather than opening `ind
 
 - **`js/data.js` → `profile`**: GitHub URL, LinkedIn URL, email address, resume path, portrait path, accessible alt text, and caption. Null social/contact values display a coming-soon notice. Resume actions open the shared in-site viewer, using `assets/resume_general.pdf` today. Change `profile.resume` to replace that document; a null or unavailable local file displays a placeholder. Downloading is a secondary action in the viewer's bottom-right corner.
 - **`js/data.js` → `biography`, `education`, `career`, `experience`, `certifications`, `skills`**: edit the hero/About narrative, education, employer progression, roles, credentials, and grouped technologies. These sections are populated from `assets/resume_general.pdf`, including Fordham graduation in May 2023, three Thrive NextGen roles, and four certifications. Certification dates and expiry status were not supplied and are omitted.
-- **`js/data.js` → `projects`**: Color-Track, N-Queens Solver, and On-Premise LLM Inference Server contain resume-supported descriptions, dates, stacks, implementation, and outcomes. Monty Hall Simulator, Ollama / Open WebUI, and Docker Homelab remain explicitly marked drafts because the resume does not document those projects. Confirm their descriptions and stacks, replace conceptual artwork with real screenshots, add repository/demo URLs, and supply personal challenge reflections. Copy a project entry to add another, including a Hermes Agent project. Use a unique `id` and `gallery: 'software'` or `'infrastructure'`.
+- **`js/data.js` → `projects`**: Color-Track, N-Queens Solver, and On-Premise LLM Inference Server contain resume-supported descriptions, dates, stacks, implementation, and outcomes. Monty Hall Simulator, Ollama / Open WebUI, and Docker Homelab remain explicitly marked drafts because the resume does not document those projects. Confirm their descriptions and stacks, replace conceptual artwork with real screenshots, and supply personal challenge reflections. Copy a project entry to add another, including a Hermes Agent project. Use a unique `id` and `gallery: 'software'` or `'infrastructure'`.
 - **`index.html`**: edit page structure, contact copy, and metadata. Hero/About and education content are rendered from `js/data.js`. Central TODO comments in that file identify missing media, links, unsupported project details, and personal reflections.
 - **`assets/`**: replace the project concept visuals with real screenshots as they become available. The portrait now uses your supplied JPEG; its path and caption are configured in `profile`. The project SVGs are original illustrations, not actual screenshots. Keep the corresponding paths and alt text in `data.js` in sync.
 - **Social sharing**: replace the SVG `og:image` placeholder with an absolute URL to a 1200 × 630 PNG or JPEG, which is more widely supported by social platforms. Customize `assets/favicon.svg` as needed.
@@ -34,7 +34,7 @@ media: [
 ]
 ```
 
-MP4 and WebM use the native video player. Videos load metadata only, do not autoplay, and support optional WebVTT captions. YouTube uses the privacy-enhanced embed domain. Closing the dialog removes media to stop playback. Use captions/transcripts for meaningful audio and avoid flashing animation. Color-Track includes a dedicated demonstration placeholder; its description is verified against the resume.
+MP4 and WebM use the native video player. Videos load metadata only, do not autoplay, and support optional WebVTT captions. YouTube uses the privacy-enhanced embed domain. Closing the dialog removes media to stop playback. Use captions/transcripts for meaningful audio and avoid flashing animation. Color-Track uses the custom `ProjectDemoPlayer` in `js/project-demo-player.js`; its media paths, telemetry timeline, console events, topics, and source facts live in `js/color-track-demo.js`. Add its recording at `/projects/color-track/demo.mp4` and poster at `/projects/color-track/poster.jpg`. The player stays disabled until the recording exists, and telemetry remains blank until actual timeline data is synchronized to the recording.
 
 ## Structure
 
@@ -43,6 +43,8 @@ index.html          Semantic page structure and metadata
 css/styles.css      Layout, typography, responsive rules, reduced motion
 js/data.js          Profile, biography, education, career, skills, and projects
 js/app.js           Reusable renderers, media, and navigation behavior
+js/project-demo-player.js Reusable recorded demo player and controls
+js/color-track-demo.js    Color-Track media, source facts, and timeline data
 js/modal.js         Shared overlay lifecycle, focus, dismissal, and cleanup
 js/resume.js        PDF page rendering, zoom, resizing, and placeholder states
 js/vendor/          Pinned, self-hosted PDF.js renderer, worker, and license
@@ -57,7 +59,7 @@ The navigation starts as a distinct hero strip and stays at the top while scroll
 
 ## Content provenance and remaining information
 
-The source reviewed is `assets/resume_general.pdf`. It supports the hero/About narrative, education, employer progression, certifications, skills, and three projects. Existing supplied contact/profile links remain configured. No repository/demo URLs, real project screenshots, certification dates, benchmark metrics, or personal challenge reflections were inferred. Monty Hall, Open WebUI, a separate Docker Homelab, and Hermes Agent details still need your confirmation. Project artwork remains labeled conceptual and missing media remains a placeholder.
+The source reviewed for portfolio content is `assets/resume_general.pdf`. The Color-Track source is [aivarnit/color-track](https://github.com/aivarnit/color-track), specifically `README.md`, `CTrack.py`, and `OANode.py`. Its repository URL is configured on the project. No demo recording or poster is included yet; the project artwork remains labeled conceptual until replaced by a real poster or screenshot.
 
 Deployment is the same as the original static repository; no npm install or production build is required.
 
@@ -69,8 +71,8 @@ Project, resume, and notice dialogs open and close immediately, including their 
 
 Project cards use static hover styling and the existing keyboard focus outline. They have no scroll reveal, focus-driven highlight, transform transition, or persistent press state, so returning focus from a modal cannot restart an animation on the previous card. Hover styling is inactive while a modal is open.
 
-A first video or YouTube media entry occupies the existing cover slot, with `project.image` providing the video poster; other media entries remain below the project description. Stable scrollbar space prevents underlying cards from shifting when scroll is locked.
+A first video or YouTube media entry occupies the existing cover slot, with `project.image` providing the video poster; other media entries remain below the project description. Color-Track has a dedicated synchronized player with custom controls and project-specific data. Stable scrollbar space prevents underlying cards from shifting when scroll is locked.
 
 ## Validation
 
-This static site has no production build command. Modal interaction checks cover immediate content/backdrop visibility and dismissal, rapid reopening and project succession, keyboard activation, focus trapping and return, reduced motion, responsive bounds, and playback cleanup. Resume preview rendering is checked alongside the shared modal controller. Git whitespace checks also pass.
+This static site has no production build command. Use a local HTTP server for browser interaction because JavaScript modules load over HTTP. Git whitespace checks are available with `git diff --check`.
