@@ -184,7 +184,7 @@ function openProject(project, card) {
   if (!isColorTrack) body.append(cover);
   body.append(element('span', 'mono muted', `${project.category.toUpperCase()} / ${project.draft ? 'DRAFT PROJECT DETAILS' : project.dates}`), title);
   if (isColorTrack) {
-    activeDemoPlayer = ProjectDemoPlayer(colorTrackDemo, { fallbackPoster: project.image });
+    activeDemoPlayer = ProjectDemoPlayer(colorTrackDemo);
     body.append(activeDemoPlayer.element);
   }
   body.append(description, tags(project.technologies));

@@ -1,0 +1,60 @@
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    add_header X-Frame-Options DENY always;
+
+    location = /healthz {
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    location = /js/color-track-runtime-config.js {
+        default_type application/javascript;
+        add_header Cache-Control no-store always;
+        return 200 'window.COLOR_TRACK_RUNTIME_CONFIG = { apiUrl: "${COLOR_TRACK_API_URL}", rosbridgeUrl: "${COLOR_TRACK_ROSBRIDGE_URL}" };';
+    }
+
+    location = /api/color-track {
+        proxy_pass http://runtime:8000/api/color-track;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    location /api/color-track/ {
+        proxy_pass http://runtime:8000/api/color-track/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    location /api/ {
+        return 404;
+    }
+
+    location = /rosbridge {
+        proxy_pass http://bridge-filter:8765;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+
+    location ^~ /color-track-runtime/ {
+        deny all;
+    }
+    location ~* \.(md|ya?ml|py|sh|dockerfile|env)$ {
+        deny all;
+    }
+    location ~ /\. {
+        deny all;
+    }
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

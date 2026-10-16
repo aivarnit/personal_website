@@ -1,0 +1,98 @@
+services:
+  ros-master:
+    image: ros:noetic-ros-core-focal
+    command: ["roscore"]
+    environment:
+      ROS_HOME: /tmp/ros
+    networks: [color-track]
+    read_only: true
+    tmpfs: [/tmp]
+    mem_limit: 384m
+    cpus: 0.75
+    pids_limit: 64
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "rosnode list >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  runtime:
+    build:
+      context: .
+      args:
+        COLOR_TRACK_REF: ${COLOR_TRACK_REF:-main}
+    image: color-track-runtime:local
+    command: ["python3", "/opt/demo/runtime_api.py"]
+    environment:
+      ROS_MASTER_URI: http://ros-master:11311
+      ROS_HOSTNAME: runtime
+      ROS_HOME: /tmp/ros
+      ALLOWED_WEB_ORIGINS: ${ALLOWED_WEB_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
+      IDLE_TIMEOUT_SECONDS: ${IDLE_TIMEOUT_SECONDS:-600}
+    depends_on:
+      ros-master:
+        condition: service_healthy
+    networks: [color-track]
+    read_only: true
+    tmpfs: [/tmp]
+    mem_limit: 768m
+    cpus: 1.25
+    pids_limit: 96
+    stop_grace_period: 20s
+    restart: unless-stopped
+
+  rosbridge:
+    image: color-track-runtime:local
+    command: ["roslaunch", "rosbridge_server", "rosbridge_websocket.launch", "port:=9090"]
+    environment:
+      ROS_MASTER_URI: http://ros-master:11311
+      ROS_HOSTNAME: rosbridge
+      ROS_HOME: /tmp/ros
+    depends_on:
+      ros-master:
+        condition: service_healthy
+    networks: [color-track]
+    read_only: true
+    tmpfs: [/tmp]
+    mem_limit: 384m
+    cpus: 0.5
+    pids_limit: 64
+    restart: unless-stopped
+
+  bridge-filter:
+    image: color-track-runtime:local
+    command: ["python3", "/opt/demo/rosbridge_proxy.py"]
+    environment:
+      ROSBRIDGE_URL: ws://rosbridge:9090
+      BRIDGE_PORT: 8765
+      ALLOWED_WEB_ORIGINS: ${ALLOWED_WEB_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
+    depends_on: [rosbridge]
+    networks: [color-track]
+    read_only: true
+    tmpfs: [/tmp]
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 32
+    restart: unless-stopped
+
+  gateway:
+    image: nginx:alpine
+    environment:
+      COLOR_TRACK_API_URL: ${COLOR_TRACK_API_URL:-/api/color-track}
+      COLOR_TRACK_ROSBRIDGE_URL: ${COLOR_TRACK_ROSBRIDGE_URL:-ws://localhost:8080/rosbridge}
+    ports:
+      - "127.0.0.1:${PORT:-8080}:80"
+    volumes:
+      - ..:/usr/share/nginx/html:ro
+      - ./nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+    depends_on: [runtime, bridge-filter]
+    networks: [color-track]
+    mem_limit: 96m
+    cpus: 0.25
+    pids_limit: 32
+    restart: unless-stopped
+
+networks:
+  color-track:
+    internal: true
