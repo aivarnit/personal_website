@@ -1,4 +1,4 @@
-import { colorTrackRuntime } from './color-track-runtime-config.js';
+import { colorTrackRuntime } from './color-track-runtime.js?v=7';
 
 const el = (tag, className, text) => {
   const node = document.createElement(tag);

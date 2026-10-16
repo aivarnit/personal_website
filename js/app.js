@@ -4,7 +4,7 @@ import { initializeMotion } from './motion.js?v=2';
 import { initializeBackground } from './background.js';
 import { createResumeViewer } from './resume.js?v=3';
 import { colorTrackDemo } from './color-track-demo.js';
-import { ProjectDemoPlayer } from './project-demo-player.js';
+import { ProjectDemoPlayer } from './project-demo-player.js?v=7';
 
 // Data is rendered as text to keep edited content from becoming executable HTML.
 function element(tag, className, text) {
