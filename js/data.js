@@ -2,7 +2,7 @@
 export const profile = {
   github: 'https://github.com/aivarnit',
   linkedin: 'https://www.linkedin.com/in/anthony-varnit/',
-  email: 'anthonyvarnit@proton.me',
+  email: 'contact@anthonyvarnit.com',
   resume: 'assets/resume_general.pdf',
   portrait: 'assets/1747692949884.jpeg',
   portraitAlt: 'Anthony Varnit',
